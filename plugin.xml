@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<?eclipse version="3.0"?>  
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="polygon.editor.PolygonEditor"
+            default="true"
+            extensions="pe"
+            id="polygon.editor"
+            name="Polygon Editor">
+      </editor>
+   </extension> 
+</plugin>
