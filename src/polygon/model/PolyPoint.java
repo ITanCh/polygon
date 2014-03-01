@@ -9,12 +9,13 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
+import polygon.model.listener.DiagramListener;
 import polygon.model.listener.ElementListener;
 
 public class PolyPoint extends ModelElement {
 	public static final int RADIUS=8;
 	private int x=0, y=0;
-	private String name="";
+	private String name="point";
 	private static final Image RECTANGLE_ICON = createImage("icons/rectangle16.gif");
 	private static IPropertyDescriptor[] descriptors;
 	private static final String XPOS_PROP = "Point.xPos";
@@ -30,7 +31,8 @@ public class PolyPoint extends ModelElement {
 				new TextPropertyDescriptor(YPOS_PROP, "Y"),
 				new TextPropertyDescriptor(NAME_PROP,"Name")};
 		// use a custom cell editor validator for all four array entries
-		for (int i = 0; i < descriptors.length; i++) {
+		//这个需要根据具体情况修改
+		for (int i = 0; i < descriptors.length-1; i++) {
 			((PropertyDescriptor) descriptors[i])
 					.setValidator(new ICellEditorValidator() {
 						public String isValid(Object value) {
@@ -40,8 +42,7 @@ public class PolyPoint extends ModelElement {
 							} catch (NumberFormatException exc) {
 								return "Not a number";
 							}
-							return (intValue >= 0) ? null
-									: "Value must be >=  0";
+							return null;
 						}
 					});
 		}
@@ -93,8 +94,13 @@ public class PolyPoint extends ModelElement {
 		}
 		if (conn.getSource() == this) {
 			sourceConnections.add(conn);
+			System.out.println("add source!!!!!!!!!!!!!!!");
+			for (ElementListener listener: listenerList)
+				listener.changeConnection();
 		} else if (conn.getTarget() == this) {
 			targetConnections.add(conn);
+			for (ElementListener listener: listenerList)
+				listener.changeConnection();
 		}
 	}
 	
@@ -104,8 +110,12 @@ public class PolyPoint extends ModelElement {
 		}
 		if (conn.getSource() == this) {
 			sourceConnections.remove(conn);
+			for (ElementListener listener: listenerList)
+				listener.changeConnection();
 		} else if (conn.getTarget() == this) {
 			targetConnections.remove(conn);
+			for (ElementListener listener: listenerList)
+				listener.changeConnection();
 		}
 	}
 	public List getSourceConnections() {
@@ -141,6 +151,7 @@ public class PolyPoint extends ModelElement {
 				setLocation(x, newY);	
 			} else if(NAME_PROP.equals(propertyId)){
 				String n=(String)value;
+				System.out.println("name "+n);
 				setName(n);
 			}
 			else {
