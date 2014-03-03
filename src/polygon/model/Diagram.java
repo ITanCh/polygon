@@ -1,35 +1,36 @@
 package polygon.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
-import polygon.model.listener.DiagramListener;
-
-public class Diagram {
+public class Diagram extends ModelElement{
+	//Property ID
+	public static final String CHILD_ADDED_PROP = "ShapesDiagram.ChildAdded";
+	public static final String CHILD_REMOVED_PROP = "ShapesDiagram.ChildRemoved";
+	
 	private List<PolyPoint> pointList=new ArrayList<PolyPoint>();
-	protected Collection<DiagramListener> listenerList=new HashSet<DiagramListener>();//记录对应的EditPart
-	public boolean addPoint(PolyPoint p){
-		if(p==null||!pointList.add(p))
-			return false;
-		//告知所有监听该model的editpart listener
-		for (DiagramListener listener: listenerList)
-			listener.addChild(p);
-		return true;
-	}
-	
-	public List getChildrenList(){
-		return pointList;
-	}
-	
-	public boolean removePoint(PolyPoint p){
-		if(p!=null&&pointList.remove(p))
+
+	//model的变化必须告诉所有的监听者这个变化
+	public boolean addChild(PolyPoint p){
+		if(p!=null&&pointList.add(p)){	
+			//告知所有监听该model的editpart listener
+			firePropertyChange(CHILD_ADDED_PROP,null,p);
 			return true;
+		}
 		return false;
 	}
 	
-	public void addPartListener(DiagramListener d){
-		listenerList.add(d);
+	public boolean removePoint(PolyPoint p){
+		if(p!=null&&pointList.remove(p)){
+			firePropertyChange(CHILD_REMOVED_PROP, null, p);
+			return true;
+		}
+		return false;
 	}
+	
+	//获得所有子model
+	public List getChildren(){
+		return pointList;
+	}
+	
 }

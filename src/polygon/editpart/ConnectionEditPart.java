@@ -2,6 +2,7 @@
 package polygon.editpart;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PolygonDecoration;
@@ -15,31 +16,23 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import polygon.command.ConnectionDeleteCommand;
 import polygon.model.PolyConnection;
-import polygon.model.listener.ElementListener;
+import polygon.model.ModelElement;
 
 
-/**
- * Edit part for Connection model elements.
- * <p>
- * This edit part must implement the PropertyChangeListener interface, so it can
- * be notified of property changes in the corresponding model element.
- * </p>
- * 
- * @author Elias Volanakis
- */
-class ConnectionEditPart extends AbstractConnectionEditPart implements ElementListener {
+class ConnectionEditPart extends AbstractConnectionEditPart  implements  PropertyChangeListener{
 
-	public ConnectionEditPart(PolyConnection c){
-		setModel(c);
-		c.addPartListener(this);
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			((ModelElement) getModel()).addPropertyChangeListener(this);
+		}
 	}
-	
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-	 */
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			((ModelElement) getModel()).removePropertyChangeListener(this);
+		}
+	}
 	protected void createEditPolicies() {
 		// Selection handle edit policy.
 		// Makes the connection show a feedback, when selected by the user.
@@ -54,20 +47,10 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements ElementLi
 				});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-	 */
+
 	protected IFigure createFigure() {
-		PolylineConnection connection = (PolylineConnection) super
-				.createFigure();
-//		connection.setTargetDecoration(new PolygonDecoration()); // arrow at
-//																	// target
-//																	// endpoint
+		PolylineConnection connection = (PolylineConnection) super.createFigure();
 		connection.setLineStyle(getCastedModel().getLineStyle()); // line
-																	// drawing
-																	// style
 		return connection;
 	}
 
@@ -88,18 +71,6 @@ class ConnectionEditPart extends AbstractConnectionEditPart implements ElementLi
 			((PolylineConnection) getFigure()).setLineStyle(getCastedModel()
 					.getLineStyle());
 		}
-	}
-
-	@Override
-	public void changeLocation(int x, int y) {
-		// TODO Auto-generated method stub
-	}
-
-
-	@Override
-	public void changeConnection() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

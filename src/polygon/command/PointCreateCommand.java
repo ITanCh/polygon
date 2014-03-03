@@ -18,7 +18,7 @@ public class PointCreateCommand extends Command{
 	
 	public void execute(){
 		point.setLocation(bounds.x,bounds.y);
-		parent.addPoint(point);			//向diagram这个model中添加这个矩形
+		parent.addChild(point);			//向diagram这个model中添加这个点
 		System.out.println(point.getX()+" "+point.getY());
 	}
 	

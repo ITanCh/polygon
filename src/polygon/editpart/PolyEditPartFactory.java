@@ -11,15 +11,15 @@ import polygon.model.PolyPoint;
 public class PolyEditPartFactory implements EditPartFactory {
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
-		// TODO Auto-generated method stub
 		EditPart editPart = null;
 		if(model instanceof Diagram)
-			editPart=new DiagramEditPart((Diagram)model);
+			editPart=new DiagramEditPart();
 		else if(model instanceof PolyPoint)
-			editPart=new PointEditPart((PolyPoint)model);
+			editPart=new PointEditPart();
 		else if(model instanceof PolyConnection) {
-			editPart= new ConnectionEditPart((PolyConnection)model);
+			editPart= new ConnectionEditPart();
 		}
+		editPart.setModel(model);
 		return editPart;
 	}
 }

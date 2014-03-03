@@ -1,5 +1,7 @@
 package polygon.editpart;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import org.eclipse.gef.EditPart;
@@ -9,14 +11,27 @@ import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gef.editpolicies.RootComponentEditPolicy;
 
 import polygon.model.Diagram;
-import polygon.model.PolyPoint;
-import polygon.model.listener.DiagramListener;
+import polygon.model.ModelElement;
 
-public class DiagramTreeEditPart extends  AbstractTreeEditPart implements DiagramListener{
-	DiagramTreeEditPart(Diagram model){
+public class DiagramTreeEditPart extends  AbstractTreeEditPart implements PropertyChangeListener{
+	
+	DiagramTreeEditPart(Diagram model) {
 		super(model);
-		model.addPartListener(this);
 	}
+	
+	public void activate() {
+		if (!isActive()) {
+			super.activate();
+			((ModelElement) getModel()).addPropertyChangeListener(this);
+		}
+	}
+	public void deactivate() {
+		if (isActive()) {
+			super.deactivate();
+			((ModelElement) getModel()).removePropertyChangeListener(this);
+		}
+	}
+	
 	
 	protected void createEditPolicies() {
 		// If this editpart is the root content of the viewer, then disallow
@@ -30,14 +45,21 @@ public class DiagramTreeEditPart extends  AbstractTreeEditPart implements Diagra
 	private EditPart getEditPartForChild(Object child) {
 		return (EditPart) getViewer().getEditPartRegistry().get(child);
 	}
-	//获取该model的所有子model
+	//获取该model的所有子model，重写
 	protected List getModelChildren() {
-		return ((Diagram)getModel()).getChildrenList(); // a list of shapes
+		return ((Diagram)getModel()).getChildren(); // a list of shapes
 	}
 
 	@Override
-	public void addChild(PolyPoint p) {
-		addChild(createChild(p),0);
+	public void propertyChange(PropertyChangeEvent evt) {
+		String prop = evt.getPropertyName();
+		if (Diagram.CHILD_ADDED_PROP.equals(prop)) {
+			addChild(createChild(evt.getNewValue()), -1);
+		} else if (Diagram.CHILD_REMOVED_PROP.equals(prop)) {
+			removeChild(getEditPartForChild(evt.getNewValue()));
+		} else {
+			refreshVisuals();
+		}
 	}
 
 }
