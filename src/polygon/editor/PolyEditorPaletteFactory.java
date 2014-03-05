@@ -26,7 +26,7 @@ public class PolyEditorPaletteFactory {
 		CombinedTemplateCreationEntry component = new CombinedTemplateCreationEntry(
 				"Point", "Create a Point", PolyPoint.class, new SimpleFactory(
 						PolyPoint.class), ImageDescriptor.createFromFile(
-						Activator.class, "icons/rectangle16.gif"),
+						Activator.class, PolyPoint.ICON1),
 				ImageDescriptor.createFromFile(Activator.class,
 						"icons/rectangle24.gif"));
 		componentsDrawer.add(component);
@@ -58,7 +58,7 @@ public class PolyEditorPaletteFactory {
 						return PolyConnection.SOLID_CONNECTION;
 					}
 				}, ImageDescriptor.createFromFile(Activator.class,
-						"icons/connection_s16.gif"),
+						PolyConnection.ICON1),
 				ImageDescriptor.createFromFile(Activator.class,
 						"icons/connection_s24.gif"));
 		toolbar.add(tool);

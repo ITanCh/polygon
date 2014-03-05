@@ -15,7 +15,8 @@ public class PolyPoint extends ModelElement {
 	public static final int RADIUS=8;
 	private int x=0, y=0;
 	private String name="point";
-	private static final Image RECTANGLE_ICON = createImage("icons/rectangle16.gif");
+	public static final String ICON1="icons/point16.gif";
+	private static final Image RECTANGLE_ICON = createImage(ICON1);
 	private static IPropertyDescriptor[] descriptors;
 	private static final String XPOS_PROP = "Point.xPos";
 	private static final String YPOS_PROP = "Point.yPos";

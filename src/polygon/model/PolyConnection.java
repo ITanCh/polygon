@@ -10,6 +10,7 @@ public class PolyConnection extends ModelElement {
 			Graphics.LINE_SOLID);
 	public static final Integer DASHED_CONNECTION = new Integer(
 			Graphics.LINE_DASH);
+	public static final String ICON1="icons/line16.gif";
 
 	/** Property ID to use when the line style of this connection is modified. */
 	public static final String LINESTYLE_PROP = "LineStyle";
