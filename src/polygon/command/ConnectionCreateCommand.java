@@ -102,6 +102,8 @@ public class ConnectionCreateCommand extends Command {
 		connection = new PolyConnection(source, target);
 		// use the supplied line style
 		connection.setLineStyle(lineStyle);
+		//在此做手脚，可以看该边是否产生了新的多边形
+		source.getParent().findTriangle(source, target);
 	}
 
 	/*

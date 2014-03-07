@@ -79,10 +79,13 @@ public class DiagramEditPart extends AbstractGraphicalEditPart implements
 			 */
 			protected Command createChangeConstraintCommand(ChangeBoundsRequest request, EditPart child,
 					Object constraint) {
-				PolyPoint p = (PolyPoint) child.getModel();
-				Rectangle box = (Rectangle) constraint;
-				Point loc=new Point(box.x,box.y);
-				return new PointMoveCommand(p, loc);
+				if (child.getModel() instanceof PolyPoint) {
+					PolyPoint p = (PolyPoint) child.getModel();
+					Rectangle box = (Rectangle) constraint;
+					Point loc = new Point(box.x, box.y);
+					return new PointMoveCommand(p, loc, getCastedModel());
+				}
+				return null;
 			}
 			
 			protected Command createChangeConstraintCommand(EditPart child,
@@ -100,11 +103,16 @@ public class DiagramEditPart extends AbstractGraphicalEditPart implements
 		String prop = evt.getPropertyName();
 		// 当有点从该diagram中添加或者移除时
 		if (Diagram.CHILD_ADDED_PROP.equals(prop)
-				|| Diagram.CHILD_REMOVED_PROP.equals(prop)) {
+				|| Diagram.CHILD_REMOVED_PROP.equals(prop)
+				||Diagram.CHILD2_ADDED_PROP.equals(prop)) {
 			refreshChildren();
 		}
 	}
 
+	public void reprintChildren(){
+		refreshChildren();
+	}
+	
 	// 重写absEP中的该函数，从而可以得到model的所有子model
 	// 在refreshChildren中会重新添加子editpart，并且绘制所有的子图
 	protected List getModelChildren() {

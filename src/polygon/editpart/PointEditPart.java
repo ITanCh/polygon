@@ -175,7 +175,8 @@ public class PointEditPart extends AbstractGraphicalEditPart implements
 		} else if (PolyPoint.TARGET_CONNECTIONS_PROP.equals(prop)) {
 			refreshTargetConnections();
 		}else if (PolyPoint.LOCATION_PROP.equals(prop)) {
-			Point newLocation=(Point)evt.getNewValue();
+			PolyPoint p=getCastedModel();
+			Point newLocation=new Point(p.getX()-PolyPoint.RADIUS,p.getY()-PolyPoint.RADIUS);
 			getFigure().setLocation(newLocation);
 		}
 	}

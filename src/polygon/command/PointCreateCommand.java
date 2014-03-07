@@ -19,11 +19,12 @@ public class PointCreateCommand extends Command{
 	public void execute(){
 		point.setLocation(bounds.x,bounds.y);
 		parent.addChild(point);			//向diagram这个model中添加这个点
+		point.setParent(parent);
 		System.out.println(point.getX()+" "+point.getY());
 	}
 	
 	public void undo() {
-		parent.removePoint(point);
+		parent.removeChild(point);
 	}
 	
 }

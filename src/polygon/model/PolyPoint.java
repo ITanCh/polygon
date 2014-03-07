@@ -15,8 +15,11 @@ public class PolyPoint extends ModelElement {
 	public static final int RADIUS=8;
 	private int x=0, y=0;
 	private String name="point";
+	private Diagram parent;
+	
 	public static final String ICON1="icons/point16.gif";
 	private static final Image RECTANGLE_ICON = createImage(ICON1);
+	
 	private static IPropertyDescriptor[] descriptors;
 	private static final String XPOS_PROP = "Point.xPos";
 	private static final String YPOS_PROP = "Point.yPos";
@@ -69,6 +72,13 @@ public class PolyPoint extends ModelElement {
 		this.y = y;
 	}
 	
+	public void setParent(Diagram p){
+		parent=p;
+	}
+	public Diagram getParent(){
+		return parent;
+	}
+	
 	public String getName(){
 		return name;
 	}
@@ -91,6 +101,10 @@ public class PolyPoint extends ModelElement {
 		Point location=new Point(x,y);
 		firePropertyChange(LOCATION_PROP, null, location);
 		return true;
+	}
+	
+	public Point getLocation(){
+		return new Point(x,y);
 	}
 	
 	//connection
@@ -125,6 +139,12 @@ public class PolyPoint extends ModelElement {
 
 	public List getTargetConnections() {
 		return new ArrayList(targetConnections);
+	}
+	
+	public List getAllConnections(){
+		ArrayList array=new ArrayList(sourceConnections);
+		array.addAll(targetConnections);
+		return array;
 	}
 	//Property
 	public IPropertyDescriptor[] getPropertyDescriptors() {
